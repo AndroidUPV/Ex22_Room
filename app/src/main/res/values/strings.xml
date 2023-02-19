@@ -1,0 +1,30 @@
+<!--
+  ~ Copyright (c) 2022
+  ~ David de Andrés and Juan Carlos Ruiz
+  ~ Development of apps for mobile devices
+  ~ Universitat Politècnica de València
+  -->
+
+<resources>
+    <string name="app_name">Ex22_Room</string>
+    <!--Strings for Contact details-->
+    <string name="hint_name">Enter the contact\'s name</string>
+    <string name="hint_email">Enter the contact\'s email address</string>
+    <string name="hint_phone">Enter the contact\'s phone number</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
+    <string name="save">Save</string>
+    <string name="email_description">Send an email to the contact</string>
+    <string name="call_description">Make a phone call to the contact</string>
+    <string name="cancel">Cancel</string>
+    <string name="call_error">It was not possible to call the contact.</string>
+    <string name="email_error">It was not possible to send the email to the contact.</string>
+    <string name="empty_name">You must enter, at least, the contact\'s name.</string>
+    <!--Strings for Contact list-->
+    <string name="loading">Loading contacts\nfrom the database</string>
+    <string name="no_contacts">There are not contacts\nin the database</string>
+    <string name="new_contact">New contact</string>
+    <!--Strings for Fragments title-->
+    <string name="contact_details">Contact details</string>
+    <string name="title_details">Contact details</string>
+</resources>

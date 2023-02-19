@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2022
+  ~ David de Andrés and Juan Carlos Ruiz
+  ~ Development of apps for mobile devices
+  ~ Universitat Politècnica de València
+  -->
+<!--Displays the list of contacts-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--RecyclerView displaying the list of contacts-->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/item_contact" />
+
+    <!--TextView to display a message in case of need-->
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tvNoContacts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="@string/loading"
+        android:textColor="?attr/colorPrimaryVariant"
+        android:textSize="24sp" />
+
+    <!--FloatingActionButton to add a new contact-->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabNewContact"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:contentDescription="@string/new_contact"
+        android:src="@drawable/ic_add" />
+</FrameLayout>

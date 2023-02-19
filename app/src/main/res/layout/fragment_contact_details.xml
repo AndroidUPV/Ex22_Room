@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2022
+  ~ David de Andrés and Juan Carlos Ruiz
+  ~ Development of apps for mobile devices
+  ~ Universitat Politècnica de València
+  -->
+
+<!--Display the details of a contact-->
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!--Displays the Title-->
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tvDetailsTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/title_details"
+            android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+            android:textColor="?attr/colorPrimaryVariant"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!--Allows for editing the contact's name-->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilDetailsName"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:hint="@string/hint_name"
+            app:layout_constraintEnd_toStartOf="@id/cvDetailsAbbreviation"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvDetailsTitle">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etDetailsName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="?attr/colorPrimaryVariant"
+                tools:text="David de Andrés" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--Allows for editing the contact's abbreviation background color-->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cvDetailsAbbreviation"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:clickable="true"
+            app:layout_constraintBottom_toBottomOf="@id/tilDetailsName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tilDetailsName"
+            app:shapeAppearanceOverlay="@style/ThemeOverlay.App.CardView"
+            app:strokeColor="@color/black"
+            app:strokeWidth="1dp"
+            tools:backgroundTint="?attr/colorPrimary">
+
+            <TextView
+                android:id="@+id/tvDetailsAbbreviation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                tools:text="DA" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <!--Allows for editing the contact's email address-->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilDetailsEmail"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:hint="@string/hint_email"
+            app:endIconContentDescription="@string/email_description"
+            app:endIconDrawable="@drawable/ic_email"
+            app:endIconMode="custom"
+            app:endIconTint="?attr/colorPrimaryVariant"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tilDetailsName">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etDetailsEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                android:textColor="?attr/colorPrimaryVariant"
+                tools:text="ddandres@disca.upv.es" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--Allows for editing the contact's phone number-->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilDetailsPhone"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:hint="@string/hint_phone"
+            app:endIconContentDescription="@string/call_description"
+            app:endIconDrawable="@drawable/ic_call"
+            app:endIconMode="custom"
+            app:endIconTint="?attr/colorPrimaryVariant"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tilDetailsEmail">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etDetailsPhone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="phone"
+                android:textColor="?attr/colorPrimaryVariant"
+                tools:text="123456789" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--Button for deleting the contact from the database-->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/bDeleteContact"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/red"
+            android:text="@string/delete"
+            android:textColor="@color/white"
+            app:icon="@drawable/ic_delete"
+            app:iconTint="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tilDetailsPhone" />
+
+        <!--Button for canceling the current operation (adding/editing the contact's detail)-->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/bCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/red"
+            android:text="@string/cancel"
+            android:textColor="@color/white"
+            app:icon="@drawable/ic_cancel"
+            app:iconTint="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tilDetailsPhone" />
+
+        <!--Button for saving the contact in the database-->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/bSaveContact"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="?attr/colorPrimaryVariant"
+            android:text="@string/save"
+            android:textColor="@color/white"
+            app:icon="@drawable/ic_save"
+            app:iconTint="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tilDetailsPhone" />
+
+        <!--Button for enabling the edition of the contact's details-->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/bEditContact"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="?attr/colorPrimaryVariant"
+            android:text="@string/edit"
+            android:textColor="@color/white"
+            app:icon="@drawable/ic_edit"
+            app:iconTint="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tilDetailsPhone" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

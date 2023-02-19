@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2022
+  ~ David de Andrés and Juan Carlos Ruiz
+  ~ Development of apps for mobile devices
+  ~ Universitat Politècnica de València
+  -->
+
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/contactsFragment">
+
+    <!--Fragment tha displays the list of contacts-->
+    <fragment
+        android:id="@+id/contactsFragment"
+        android:name="upv.dadm.ex22_room.ui.contacts.ContactsFragment"
+        android:label="@string/app_name">
+        <!--Display the contact's details-->
+        <action
+            android:id="@+id/navigateToContactDetailsFragment"
+            app:destination="@id/contactDetailsFragment" />
+    </fragment>
+    <!--DialogFragment that displays the contact's details-->
+    <dialog
+        android:id="@+id/contactDetailsFragment"
+        android:name="upv.dadm.ex22_room.ui.contacts.ContactDetailsFragment"
+        android:label="@string/contact_details" />
+</navigation>

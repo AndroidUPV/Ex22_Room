@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2022
+  ~ David de Andrés and Juan Carlos Ruiz
+  ~ Development of apps for mobile devices
+  ~ Universitat Politècnica de València
+  -->
+<!--Displays the name and abbreviation of the contact-->
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="16dp">
+
+        <!--Displays a colored circle with the abbreviation of the contact's name-->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/tvContactCard"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/ThemeOverlay.App.CardView"
+            app:strokeColor="@color/black"
+            app:strokeWidth="1dp"
+            tools:backgroundTint="?attr/colorPrimary">
+
+            <TextView
+                android:id="@+id/tvContactAcronym"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                tools:text="DA" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <!--Displays the contact's name-->
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tvContactName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:textColor="?attr/colorPrimaryVariant"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tvContactCard"
+            app:layout_constraintStart_toEndOf="@+id/tvContactCard"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="David de Andrés" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
