@@ -7,9 +7,9 @@
 
 package upv.dadm.ex22_room.ui.contacts
 
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
+import androidx.lifecycle.map
 import dagger.hilt.android.lifecycle.HiltViewModel
 import upv.dadm.ex22_room.data.contacts.ContactsRepository
 import javax.inject.Inject
@@ -27,7 +27,7 @@ class ContactsViewModel @Inject constructor(
     val contacts = contactsRepository.getContactsBrief().asLiveData()
 
     // Display a message whenever there are no contacts in the database
-    val isMessageVisible = Transformations.map(contacts) { list ->
+    val isMessageVisible = contacts.map { list ->
         list.isEmpty()
     }
 

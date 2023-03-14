@@ -49,27 +49,27 @@ class ContactDetailViewModel @Inject constructor(
         get() = _mode
 
     // Show the edit Button only in VIEWING mode
-    val isEditVisible = Transformations.map(mode) { mode ->
+    val isEditVisible = mode.map { mode ->
         mode == Mode.VIEWING
     }
 
     // Show the save Button in ADDING and EDITING mode
-    val isSaveVisible = Transformations.map(mode) { mode ->
+    val isSaveVisible = mode.map { mode ->
         mode == Mode.ADDING || mode == Mode.EDITING
     }
 
     // Show the delete Button in VIEWING mode
-    val isDeleteVisible = Transformations.map(mode) { mode ->
+    val isDeleteVisible = mode.map { mode ->
         mode == Mode.VIEWING
     }
 
     // Show the cancel Button in ADDING and EDITING mode
-    val isCancelVisible = Transformations.map(mode) { mode ->
+    val isCancelVisible = mode.map { mode ->
         mode == Mode.ADDING || mode == Mode.EDITING
     }
 
     // Enable the EditText fields in ADDING and EDITING mode
-    val isEditTextEnabled = Transformations.map(mode) { mode ->
+    val isEditTextEnabled = mode.map { mode ->
         mode == Mode.ADDING || mode == Mode.EDITING
     }
 
