@@ -1,11 +1,15 @@
 /*
- * Copyright (c) 2022
- * David de Andrés and Juan Carlos Ruiz
- * Development of apps for mobile devices
- * Universitat Politècnica de València
+ * Copyright (c) 2022-2023 Universitat Politècnica de València
+ * Authors: David de Andrés and Juan Carlos Ruiz
+ *          Fault-Tolerant Systems
+ *          Instituto ITACA
+ *          Universitat Politècnica de València
+ *
+ * Distributed under MIT license
+ * (See accompanying file LICENSE.txt)
  */
 
-package upv.dadm.ex22_room.ui.contacts
+package upv.dadm.ex22_room.ui.contactdetail
 
 import android.graphics.Color
 import androidx.lifecycle.*
@@ -31,22 +35,19 @@ class ContactDetailViewModel @Inject constructor(
     private val _selectedContact = MutableLiveData<Contact?>()
 
     // Selected contact
-    val selectedContact: LiveData<Contact?>
-        get() = _selectedContact
+    val selectedContact: LiveData<Contact?> = _selectedContact
 
     // Backing property for the abbreviation background color (default empty)
     private val _color = MutableLiveData<Int>()
 
     // Abbreviation background color
-    val color: LiveData<Int>
-        get() = _color
+    val color: LiveData<Int> = _color
 
     // Backing property for the selected operation mode (default empty)
     private val _mode = MutableLiveData<Mode>()
 
     // Selected operation mode
-    val mode: LiveData<Mode>
-        get() = _mode
+    val mode: LiveData<Mode> = _mode
 
     // Show the edit Button only in VIEWING mode
     val isEditVisible = mode.map { mode ->
