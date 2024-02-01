@@ -15,11 +15,14 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import androidx.core.content.ContextCompat.getColor
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import upv.dadm.ex22_room.R
 import upv.dadm.ex22_room.databinding.FragmentContactDetailsBinding
 import upv.dadm.ex22_room.model.Contact
@@ -49,42 +52,39 @@ class ContactDetailsFragment : BottomSheetDialogFragment(R.layout.fragment_conta
         // Get the automatically generated view binding for the layout resource
         _binding = FragmentContactDetailsBinding.bind(view)
 
-        // Update the details of the selected contact (if not null)
-        viewModel.selectedContact.observe(viewLifecycleOwner) { contact ->
-            if (contact != null) {
-                // Update the text of all elements in the view
-                bindDetails(contact)
-                // Set the abbreviation color to that provided by the contact
-                viewModel.setAbbreviationColor(contact.color)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.selectedContact.collect { selectedContact ->
+                    selectedContact?.let { contact ->
+                        // Update the text of all elements in the view
+                        bindDetails(contact)
+                        // Set the abbreviation color to that provided by the contact
+                        viewModel.setAbbreviationColor(contact.color)
+                    }
+                }
             }
         }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect { uiState ->
+                    // Set the background color of the abbreviation when it changes
+                    binding.cvDetailsAbbreviation.setCardBackgroundColor(uiState.color)
 
-        // Set the background color of the abbreviation when it changes
-        viewModel.color.observe(viewLifecycleOwner) { color ->
-            binding.cvDetailsAbbreviation.setCardBackgroundColor(color)
-        }
-        // Update the visibility of the edit Button when it changes
-        viewModel.isEditVisible.observe(viewLifecycleOwner) { isVisible ->
-            binding.bEditContact.visibility = if (isVisible) View.VISIBLE else View.INVISIBLE
-        }
-        // Update the visibility of the cancel Button when it changes
-        viewModel.isCancelVisible.observe(viewLifecycleOwner) { isVisible ->
-            binding.bCancel.visibility = if (isVisible) View.VISIBLE else View.INVISIBLE
-        }
-        // Update the visibility of the delete Button when it changes
-        viewModel.isDeleteVisible.observe(viewLifecycleOwner) { isVisible ->
-            binding.bDeleteContact.visibility = if (isVisible) View.VISIBLE else View.INVISIBLE
-        }
-        // Update the visibility of the save Button when it changes
-        viewModel.isSaveVisible.observe(viewLifecycleOwner) { isVisible ->
-            binding.bSaveContact.visibility = if (isVisible) View.VISIBLE else View.INVISIBLE
-        }
-        // Update the enable property of the EditText fields (editable/not editable) when it changes
-        viewModel.isEditTextEnabled.observe(viewLifecycleOwner) { isEnabled ->
-            binding.etDetailsName.isEnabled = isEnabled
-            binding.etDetailsEmail.isEnabled = isEnabled
-            binding.etDetailsPhone.isEnabled = isEnabled
-            binding.cvDetailsAbbreviation.isEnabled = isEnabled
+                    // Update the visibility of the edit Button when it changes
+                    binding.bEditContact.visibility = uiState.editVisibility()
+                    // Update the visibility of the cancel Button when it changes
+                    binding.bCancel.visibility = uiState.cancelVisibility()
+                    // Update the visibility of the delete Button when it changes
+                    binding.bDeleteContact.visibility = uiState.deleteVisibility()
+                    // Update the visibility of the save Button when it changes
+                    binding.bSaveContact.visibility = uiState.saveVisibility()
+                    // Update the enable property of the EditText fields (editable/not editable) when it changes
+                    binding.etDetailsName.isEnabled = uiState.isEditTextEnabled()
+                    binding.etDetailsEmail.isEnabled = uiState.isEditTextEnabled()
+                    binding.etDetailsPhone.isEnabled = uiState.isEditTextEnabled()
+                    binding.cvDetailsAbbreviation.isEnabled = uiState.isEditTextEnabled()
+                }
+            }
         }
         // Update the abbreviation when the contact's name changes
         binding.etDetailsName.setOnFocusChangeListener { _, focused ->
@@ -116,7 +116,7 @@ class ContactDetailsFragment : BottomSheetDialogFragment(R.layout.fragment_conta
         }
         // Manage the cancel Button
         binding.bCancel.setOnClickListener {
-            if (viewModel.mode.value == ContactDetailViewModel.Mode.ADDING)
+            if (viewModel.uiState.value.mode == ContactDetailViewModel.Mode.ADDING)
             // Dismiss the dialog if in ADDING mode
                 dismiss()
             else {
@@ -132,7 +132,7 @@ class ContactDetailsFragment : BottomSheetDialogFragment(R.layout.fragment_conta
                 // Display an error message if the contact's name is empty
                 displayMessage(R.string.empty_name)
             } else {
-                if (viewModel.mode.value == ContactDetailViewModel.Mode.ADDING) {
+                if (viewModel.uiState.value.mode == ContactDetailViewModel.Mode.ADDING) {
                     // Add a new contact to the database with the information entered
                     // and dismiss the dialog, if in ADDING mode
                     viewModel.addContact(
@@ -142,10 +142,7 @@ class ContactDetailsFragment : BottomSheetDialogFragment(R.layout.fragment_conta
                             email = binding.etDetailsEmail.text.toString(),
                             phone = binding.etDetailsPhone.text.toString(),
                             abbreviation = binding.tvDetailsAbbreviation.text.toString(),
-                            color = viewModel.color.value ?: getColor(
-                                requireContext(),
-                                R.color.black
-                            )
+                            color = viewModel.uiState.value.color
                         )
                     )
                     dismiss()
@@ -159,10 +156,7 @@ class ContactDetailsFragment : BottomSheetDialogFragment(R.layout.fragment_conta
                             email = binding.etDetailsEmail.text.toString(),
                             phone = binding.etDetailsPhone.text.toString(),
                             abbreviation = binding.tvDetailsAbbreviation.text.toString(),
-                            color = viewModel.color.value ?: getColor(
-                                requireContext(),
-                                R.color.black
-                            )
+                            color = viewModel.uiState.value.color
                         )
                     )
                 }

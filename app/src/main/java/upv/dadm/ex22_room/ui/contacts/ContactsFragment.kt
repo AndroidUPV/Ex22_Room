@@ -16,8 +16,12 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import upv.dadm.ex22_room.R
 import upv.dadm.ex22_room.databinding.FragmentContactsBinding
 import upv.dadm.ex22_room.ui.contactdetail.ContactDetailViewModel
@@ -61,26 +65,33 @@ class ContactsFragment : Fragment(R.layout.fragment_contacts) {
                     findNavController().navigate(R.id.navigateToContactDetailsFragment)
                 }
         }
-        // Submit a new list to be displayed whenever the contacts in the database change
-        viewModel.contacts.observe(viewLifecycleOwner) { list ->
-            adapter.submitList(list)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                // Submit a new list to be displayed whenever the contacts in the database change
+                viewModel.contacts.collect { list ->
+                    adapter.submitList(list)
+                    // Display a message when there are no contacts in the database
+                    if (list.isEmpty()) {
+                        binding.tvNoContacts.visibility = View.VISIBLE
+                        binding.tvNoContacts.text = getString(R.string.no_contacts)
+                    } else binding.tvNoContacts.visibility = View.INVISIBLE
+                }
+            }
         }
-        // Display a message when there are no contacts in the database
-        viewModel.isMessageVisible.observe(viewLifecycleOwner) { isVisible ->
-            if (isVisible) {
-                binding.tvNoContacts.visibility = View.VISIBLE
-                binding.tvNoContacts.text = getString(R.string.no_contacts)
-            } else binding.tvNoContacts.visibility = View.INVISIBLE
-        }
-        // Enter VIEWING mode and display a dialog with the contact's details
-        // whenever a contact is selected
-        detailsViewModel.selectedContact.observe(viewLifecycleOwner) { contact ->
-            if (contact != null) {
-                detailsViewModel.setModeViewing()
-                findNavController().currentDestination?.getAction(R.id.navigateToContactDetailsFragment)
-                    ?.let {
-                        findNavController().navigate(R.id.navigateToContactDetailsFragment)
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                // Enter VIEWING mode and display a dialog with the contact's details
+                // whenever a contact is selected
+                detailsViewModel.selectedContact.collect { contact ->
+                    if (contact != null) {
+                        detailsViewModel.setModeViewing()
+                        findNavController().currentDestination?.getAction(R.id.navigateToContactDetailsFragment)
+                            ?.let {
+                                findNavController().navigate(R.id.navigateToContactDetailsFragment)
+                            }
                     }
+                }
             }
         }
 
@@ -90,7 +101,7 @@ class ContactsFragment : Fragment(R.layout.fragment_contacts) {
      * Get the selected contact's details from the database and hold them in the ViewModel.
      */
     private fun getSelectedContact(position: Int) =
-        detailsViewModel.getContactDetails(viewModel.contacts.value?.get(position)?.id!!)
+        detailsViewModel.getContactDetails(viewModel.contacts.value[position].id)
 
 
     override fun onDestroyView() {

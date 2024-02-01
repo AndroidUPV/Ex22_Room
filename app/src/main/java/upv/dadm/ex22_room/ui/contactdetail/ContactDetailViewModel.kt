@@ -12,12 +12,46 @@
 package upv.dadm.ex22_room.ui.contactdetail
 
 import android.graphics.Color
-import androidx.lifecycle.*
+import android.view.View
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import upv.dadm.ex22_room.data.contacts.ContactsRepository
 import upv.dadm.ex22_room.model.Contact
 import javax.inject.Inject
+
+/**
+ * A ContactDetailsUiState object containing the background color
+ * of the contact's name abbreviation, and the edition mode.
+ */
+data class ContactDetailsUiState(
+    val color: Int,
+    val mode: ContactDetailViewModel.Mode
+) {
+    // Show the edit Button only in VIEWING mode
+    fun editVisibility() =
+        if (mode == ContactDetailViewModel.Mode.VIEWING) View.VISIBLE else View.INVISIBLE
+
+    // Show the save Button in ADDING and EDITING mode
+    fun saveVisibility() =
+        if (mode == ContactDetailViewModel.Mode.ADDING || mode == ContactDetailViewModel.Mode.EDITING) View.VISIBLE else View.INVISIBLE
+
+    // Show the delete Button in VIEWING mode
+    fun deleteVisibility() =
+        if (mode == ContactDetailViewModel.Mode.VIEWING) View.VISIBLE else View.INVISIBLE
+
+    // Show the cancel Button in ADDING and EDITING mode
+    fun cancelVisibility() =
+        if (mode == ContactDetailViewModel.Mode.ADDING || mode == ContactDetailViewModel.Mode.EDITING) View.VISIBLE else View.INVISIBLE
+
+    // Enable the EditText fields in ADDING and EDITING mode
+    fun isEditTextEnabled() =
+        mode == ContactDetailViewModel.Mode.ADDING || mode == ContactDetailViewModel.Mode.EDITING
+}
 
 /**
  * Holds information about the selected contact.
@@ -31,54 +65,22 @@ class ContactDetailViewModel @Inject constructor(
     // Enumeration the defines the available operation modes
     enum class Mode { VIEWING, ADDING, EDITING }
 
-    // Backing property for the selected contact (default empty, can be null)
-    private val _selectedContact = MutableLiveData<Contact?>()
-
+    // Backing property for the selected contact
+    private val _selectedContact = MutableStateFlow<Contact?>(null)
     // Selected contact
-    val selectedContact: LiveData<Contact?> = _selectedContact
+    val selectedContact = _selectedContact.asStateFlow()
 
-    // Backing property for the abbreviation background color (default empty)
-    private val _color = MutableLiveData<Int>()
-
-    // Abbreviation background color
-    val color: LiveData<Int> = _color
-
-    // Backing property for the selected operation mode (default empty)
-    private val _mode = MutableLiveData<Mode>()
-
-    // Selected operation mode
-    val mode: LiveData<Mode> = _mode
-
-    // Show the edit Button only in VIEWING mode
-    val isEditVisible = mode.map { mode ->
-        mode == Mode.VIEWING
-    }
-
-    // Show the save Button in ADDING and EDITING mode
-    val isSaveVisible = mode.map { mode ->
-        mode == Mode.ADDING || mode == Mode.EDITING
-    }
-
-    // Show the delete Button in VIEWING mode
-    val isDeleteVisible = mode.map { mode ->
-        mode == Mode.VIEWING
-    }
-
-    // Show the cancel Button in ADDING and EDITING mode
-    val isCancelVisible = mode.map { mode ->
-        mode == Mode.ADDING || mode == Mode.EDITING
-    }
-
-    // Enable the EditText fields in ADDING and EDITING mode
-    val isEditTextEnabled = mode.map { mode ->
-        mode == Mode.ADDING || mode == Mode.EDITING
-    }
+    // UI state (mutable): color and mode properties
+    private val _uiState =
+        MutableStateFlow(ContactDetailsUiState(0, Mode.VIEWING))
+    // Backing property (immutable)
+    val uiState = _uiState.asStateFlow()
 
     /**
      * Sets the selected operation mode
      */
     private fun setMode(mode: Mode) {
-        _mode.value = mode
+        _uiState.update { state -> state.copy(mode = mode) }
     }
 
     /**
@@ -117,8 +119,7 @@ class ContactDetailViewModel @Inject constructor(
      */
     fun getContactDetails(id: Int) {
         viewModelScope.launch {
-            _selectedContact.value =
-                contactsRepository.getContact(id)
+            _selectedContact.update { contactsRepository.getContact(id) }
         }
     }
 
@@ -146,7 +147,7 @@ class ContactDetailViewModel @Inject constructor(
      * and generate a new background color for the contact's abbreviation.
      */
     private fun clearSelectedContact() {
-        _selectedContact.value = null
+        _selectedContact.update { null }
         generateRandomColor()
     }
 
@@ -165,7 +166,7 @@ class ContactDetailViewModel @Inject constructor(
      * Sets the background color of the abbreviation.
      */
     fun setAbbreviationColor(newColor: Int) {
-        _color.value = newColor
+        _uiState.update { state -> state.copy(color = newColor) }
     }
 
     /**

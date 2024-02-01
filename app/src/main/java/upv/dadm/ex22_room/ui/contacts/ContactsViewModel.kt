@@ -12,9 +12,10 @@
 package upv.dadm.ex22_room.ui.contacts
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.map
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 import upv.dadm.ex22_room.data.contacts.ContactsRepository
 import javax.inject.Inject
 
@@ -28,11 +29,9 @@ class ContactsViewModel @Inject constructor(
 ) : ViewModel() {
 
     // List of contacts retrieved from the database as a Flow and changed into LiveData
-    val contacts = contactsRepository.getContactsBrief().asLiveData()
-
-    // Display a message whenever there are no contacts in the database
-    val isMessageVisible = contacts.map { list ->
-        list.isEmpty()
-    }
-
+    val contacts = contactsRepository.getContactsBrief().stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(),
+        initialValue = listOf()
+    )
 }
