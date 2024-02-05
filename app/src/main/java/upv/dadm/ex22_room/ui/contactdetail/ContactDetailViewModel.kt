@@ -73,7 +73,7 @@ class ContactDetailViewModel @Inject constructor(
     // UI state (mutable): color and mode properties
     private val _uiState =
         MutableStateFlow(ContactDetailsUiState(0, Mode.VIEWING))
-    // Backing property (immutable)
+    // UI state (immutable)
     val uiState = _uiState.asStateFlow()
 
     /**
