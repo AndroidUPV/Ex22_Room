@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?><!--
-  ~ Copyright (c) 2022-2023 Universitat Politècnica de València
+  ~ Copyright (c) 2022-2024 Universitat Politècnica de València
   ~ Authors: David de Andrés and Juan Carlos Ruiz
   ~          Fault-Tolerant Systems
   ~          Instituto ITACA
@@ -18,7 +18,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="16dp">
+        android:layout_margin="@dimen/margins">
 
         <!--Displays a colored circle with the abbreviation of the contact's name-->
         <com.google.android.material.card.MaterialCardView
@@ -49,7 +49,7 @@
             android:id="@+id/tvContactName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="@dimen/margins"
             android:textColor="?attr/colorPrimaryVariant"
             android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="@+id/tvContactCard"
