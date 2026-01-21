@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024 Universitat Politècnica de València
+ * Copyright (c) 2022-2026 Universitat Politècnica de València
  * Authors: David de Andrés and Juan Carlos Ruiz
  *          Fault-Tolerant Systems
  *          Instituto ITACA
@@ -52,7 +52,7 @@ class ContactBriefAdapter(private val onItemClicked: (Int) -> Unit) :
         init {
             // This listener will be executed when the View is clicked
             // to display the details of the contact clicked
-            binding.root.setOnClickListener { onItemClicked(adapterPosition) }
+            binding.root.setOnClickListener { onItemClicked(absoluteAdapterPosition) }
         }
 
         /**

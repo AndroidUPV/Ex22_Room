@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024 Universitat Politècnica de València
+ * Copyright (c) 2022-2026 Universitat Politècnica de València
  * Authors: David de Andrés and Juan Carlos Ruiz
  *          Fault-Tolerant Systems
  *          Instituto ITACA
@@ -12,9 +12,9 @@
 package upv.dadm.ex22_room.ui.contactdetail
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import androidx.core.net.toUri
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -183,7 +183,7 @@ class ContactDetailsFragment : BottomSheetDialogFragment(R.layout.fragment_conta
                             .setAction(Intent.ACTION_SENDTO)
                             .putExtra(Intent.EXTRA_EMAIL, binding.etDetailsEmail.text)
                     )
-                } catch (e: Exception) {
+                } catch (_: Exception) {
                     // Display an error message if it was not possible to send the email
                     displayMessage(R.string.email_error)
                 }
@@ -197,9 +197,9 @@ class ContactDetailsFragment : BottomSheetDialogFragment(R.layout.fragment_conta
                     startActivity(
                         Intent()
                             .setAction(Intent.ACTION_DIAL)
-                            .setData(Uri.parse("tel:${binding.etDetailsPhone.text}"))
+                            .setData("tel:${binding.etDetailsPhone.text}".toUri())
                     )
-                } catch (e: Exception) {
+                } catch (_: Exception) {
                     // Display an error message if it was not possible to make the phone call
                     displayMessage(R.string.call_error)
                 }
